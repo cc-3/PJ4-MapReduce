@@ -17,6 +17,7 @@ from helper_functions import *
 
 
 def naive_compress(image):
+    image = truncate((None, image))[1]
     Y, crf, cbf = convert_to_YCrCb(image)
     channels = [Y, crf, cbf]
     height, width = image.shape[0:2]
