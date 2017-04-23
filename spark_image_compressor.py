@@ -21,7 +21,8 @@ import pyspark
 import numpy as np
 from helper_functions import *
 from pyspark import SparkContext, SparkConf
-
+# esta sera la unica variable global
+B_SIZE = 8
 
 ############ AQUI TIENEN QUE DEFINIR SUS FUNCIONES DE AYUDA ###############
 
@@ -50,7 +51,6 @@ def generate_sub_blocks(rdd):
     estaba?
     """
     ### SU SOLUCION AQUI ###
-    rdd = rdd.flatMap(generate_sub_blocks_flatmap).repartition(16)
     return rdd
 
 
@@ -80,7 +80,7 @@ def combine_sub_blocks(rdd):
     return rdd
 
 
-def run(images, QF=99, batch_size=64, threads=8):
+def run(images, batch_size=64, threads=8):
     """
     Esta funcion tiene que retornar una lista de python
 
@@ -89,10 +89,6 @@ def run(images, QF=99, batch_size=64, threads=8):
     deberia de encontrar una tupla de la forma (image_id, image_matrix) donde
     image_matrix es un arreglo de numpy de size (height, width, 3)
     """
-
-    # algunas variables globales
-    global P, WIDTH, HEIGHT, QF_G, B_SIZE
-
     # inicializamos spark
     url = 'local[{0}]'.format(threads)
     # lo configuramos
@@ -110,14 +106,8 @@ def run(images, QF=99, batch_size=64, threads=8):
     # este caso lo hacemos con repartition despues de una transformacion
     # o en el momento de crear el RDD (VEAN LAS NOTAS DE SPARK DEL PROYECTO)
     # para ver como pueden utilizar esto para que sea mas eficiente
+    global P
     P = threads * 2
-    # WIDTH HEIGHT B_SIZE Y QF
-    # estas las tienen que utilizar en sus funciones a la hora de transformar
-    # los bloques y restaurar las imagenes asi que no las olviden
-    HEIGHT, WIDTH = images[0][1].shape[0:2]
-    QF_G = QF
-    # block size
-    B_SIZE = 8  # siempre es 8
     # iteramos
     # xrange = range solo que xrange no crea el arreglo online, xrange es mas
     # eficiente en terminos de memoria
@@ -128,7 +118,7 @@ def run(images, QF=99, batch_size=64, threads=8):
         # obtenemos el batch de imagenes
         batch = images[START:END]
         # truncamos el batch de imagenes
-        rdd = sc.parallelize(batch, P).map(truncate)
+        rdd = sc.parallelize(batch, P).map(truncate).repartition(P)
         ##########################
         #    AQUI SU SOLUCION    #
         ##########################

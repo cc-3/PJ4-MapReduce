@@ -17,7 +17,7 @@ from helper_functions import *
 
 
 def naive_compress(image):
-    image = truncate((None, image))[1]
+    image = truncate((None, (image, None)))[1][0]
     Y, crf, cbf = convert_to_YCrCb(image)
     channels = [Y, crf, cbf]
     height, width = image.shape[0:2]
@@ -66,7 +66,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
             description="realiza la compresion forma secuencial.")
-    parser.add_argument("-I", "--input", type=str, default="test/",
+    parser.add_argument("-I", "--input", type=str, default="test/test1.jpg",
             help="imagen de entrada")
     parser.add_argument("-C", "--QF", type=int, default=99,
             help="taza de compresion de la imagen")

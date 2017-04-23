@@ -119,7 +119,7 @@ def truncate(pair):
     sean multiplos de 8. Si es necesario se trunca la imagen.
     """
     k = pair[0]
-    img = pair[1]
+    img, QF = pair[1]
     height, width = np.array(img.shape[:2])/8 * 8
     img = img[:height, :width]
-    return (k, img)
+    return (k, (img, QF))
