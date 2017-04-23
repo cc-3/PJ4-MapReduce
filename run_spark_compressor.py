@@ -14,7 +14,6 @@
 """
 
 import os
-import time
 import cv2
 import argparse
 import numpy as np
@@ -29,7 +28,7 @@ def main(args):
     threads = args.threads
     if args.test:
         # para siempre obtener las mismas imagenes random
-        np.random.seed(223)
+        np.random.seed(1)
         # creamos una coleccion de imagenes random
         image_collection = []
         for idx in xrange(100):
