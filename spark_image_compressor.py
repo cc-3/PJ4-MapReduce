@@ -91,7 +91,7 @@ def run(images, QF=99, batch_size=64, threads=8):
     """
 
     # algunas variables globales
-    global P, WIDTH, HEIGHT, QF_G
+    global P, WIDTH, HEIGHT, QF_G, B_SIZE
 
     # inicializamos spark
     url = 'local[{0}]'.format(threads)
@@ -111,11 +111,13 @@ def run(images, QF=99, batch_size=64, threads=8):
     # o en el momento de crear el RDD (VEAN LAS NOTAS DE SPARK DEL PROYECTO)
     # para ver como pueden utilizar esto para que sea mas eficiente
     P = threads * 2
-    # WIDTH HEIGHT Y QF
+    # WIDTH HEIGHT B_SIZE Y QF
     # estas las tienen que utilizar en sus funciones a la hora de transformar
     # los bloques y restaurar las imagenes asi que no las olviden
     HEIGHT, WIDTH = images[0][1].shape[0:2]
     QF_G = QF
+    # block size
+    B_SIZE = 8  # siempre es 8
     # iteramos
     # xrange = range solo que xrange no crea el arreglo online, xrange es mas
     # eficiente en terminos de memoria
