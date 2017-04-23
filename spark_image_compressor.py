@@ -118,6 +118,7 @@ def run(images, batch_size=64, threads=8):
         # obtenemos el batch de imagenes
         batch = images[START:END]
         # truncamos el batch de imagenes
+        # en este momento rdd tiene pares (idx, (img, QF))
         rdd = sc.parallelize(batch, P).map(truncate).repartition(P)
         ##########################
         #    AQUI SU SOLUCION    #
