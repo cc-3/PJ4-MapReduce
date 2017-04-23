@@ -61,7 +61,8 @@ def main(args):
         clip = VideoFileClip(args.input)
         # obtenemos los frames y los enumeramos, importante enumerar asi lo
         # podemos ordenar ya procesados
-        frames = [(idx, frame) for idx, frame in enumerate(clip.iter_frames())]
+        frames = [(idx, frame) for idx, frame in
+                  enumerate(clip.iter_frames(fps=30))]
         # corremos el algoritmo
         result = run(frames, QF=QF, batch_size=bSz, threads=threads)
         # ordenamos los frames

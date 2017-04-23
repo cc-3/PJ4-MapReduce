@@ -112,6 +112,8 @@ def run(images, QF=99, batch_size=64, threads=8):
     # para ver como pueden utilizar esto para que sea mas eficiente
     P = threads * 2
     # WIDTH HEIGHT Y QF
+    # estas las tienen que utilizar en sus funciones a la hora de transformar
+    # los bloques y restaurar las imagenes asi que no las olviden
     HEIGHT, WIDTH = images[0][1].shape[0:2]
     QF_G = QF
     # iteramos
