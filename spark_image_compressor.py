@@ -13,7 +13,8 @@
  |___|_|_|_\__,_\__, \___|  \___\___/_|_|_| .__/_| \___/__/__/\___/_|
                 |___/                     |_|
 
-
+    Este archivo es que tienen que modificar para obtener el resultado
+    deseado
 """
 
 import pyspark
@@ -88,6 +89,10 @@ def run(images, QF=99, batch_size=64, threads=8):
     deberia de encontrar una tupla de la forma (image_id, image_matrix) donde
     image_matrix es un arreglo de numpy de size (height, width, 3)
     """
+
+    # algunas variables globales
+    global P, WIDTH, HEIGHT, QF_G
+
     # inicializamos spark
     url = 'local[{0}]'.format(threads)
     # lo configuramos
@@ -106,6 +111,9 @@ def run(images, QF=99, batch_size=64, threads=8):
     # o en el momento de crear el RDD (VEAN LAS NOTAS DE SPARK DEL PROYECTO)
     # para ver como pueden utilizar esto para que sea mas eficiente
     P = threads * 2
+    # WIDTH HEIGHT Y QF
+    HEIGHT, WIDTH = images[0][1].shape[0:2]
+    QF_G = QF
     # iteramos
     # xrange = range solo que xrange no crea el arreglo online, xrange es mas
     # eficiente en terminos de memoria
@@ -124,6 +132,7 @@ def run(images, QF=99, batch_size=64, threads=8):
         # rdd aqui pueden escribir todas las funciones que quieran y crean que
         # sean necesarias
         output += rdd.collect()
-
+    # le damos stop al contexto de spark para finalizar
+    sc.stop()
     # devolvemos el resultado
     return  output
