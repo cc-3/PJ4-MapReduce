@@ -34,9 +34,9 @@ def main(args):
         image_collection = []
         for idx in xrange(100):
             img = np.round(np.random.rand(400, 400, 3) * 255).astype('uint8')
-            image_collection.append((idx, img))
+            image_collection.append((idx, (img, QF)))
         # corremos su algoritmo
-        result = run(image_collection, QF=QF, batch_size=bSz, threads=threads)
+        result = run(image_collection, batch_size=bSz, threads=threads)
         # ordenamos por key
         result.sort(key=lambda x: x[0])
         # creamos una secuencia de strings para usar writelines
@@ -49,9 +49,9 @@ def main(args):
         image = cv2.imread(args.input, cv2.IMREAD_UNCHANGED)
         # hacemos de que la imagen se copie 10 veces para que tenga sentido
         # correrlo con spark
-        images = [(idx, image) for idx in range(10)]
+        images = [(idx, (image, QF)) for idx in range(1)]
         # corremos su algoritmo
-        result = run(images, QF=QF, batch_size=bSz, threads=threads)
+        result = run(images, batch_size=bSz, threads=threads)
         # nombre de salida
         input_name = os.path.basename(args.input)
         output = 'spark_QF' + str(QF) + '_' + input_name
@@ -61,10 +61,10 @@ def main(args):
         clip = VideoFileClip(args.input)
         # obtenemos los frames y los enumeramos, importante enumerar asi lo
         # podemos ordenar ya procesados
-        frames = [(idx, frame) for idx, frame in
+        frames = [(idx, (frame, QF)) for idx, frame in
                   enumerate(clip.iter_frames(fps=30))]
         # corremos el algoritmo
-        result = run(frames, QF=QF, batch_size=bSz, threads=threads)
+        result = run(frames, batch_size=bSz, threads=threads)
         # ordenamos los frames
         result.sort(key=lambda x: x[0])
         # solo dejamos los frames
